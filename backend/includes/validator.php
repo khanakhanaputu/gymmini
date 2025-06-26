@@ -202,6 +202,52 @@
 
     }
 
+    // validasi update user 
+    function updateUserValidation($data, $conn)  {
+        $error = null;
+
+        $email = $data["email"] ?? null;
+        $username = $data["username"] ?? null;
+        $password = $data["password"] ?? null;
+        $user_id = $data["user_id"] ?? null;
+
+        //validasi email 
+        // validasi email
+        if(!isRequired($email)) {
+            $error['email'][] = "Email can't be empty!";
+        } else {
+            if(!isEmailValid($email)){
+                $error['email'][] = "Invalid email format!";
+            } elseif(isEmailTakenByOther($email, $user_id, $conn)) {
+                $error['email'][] = "Email already is use";
+            } 
+        }
+
+        // validasi username
+        if(!isRequired($username)){
+            $error['username'][] = "Username can't be empty!"; 
+        } elseif(!hasMinLength($username, 5)) {
+            $error['username'][] = "Username must have at least 5 characters";
+        } elseif(!hasMaxLength($username, 20)) {
+            $error['username'][] = "username has a maximum of 20 characters";
+        } elseif(isUsernameTakenByOther($username, $user_id, $conn)){
+            $error['username'][] = "username already taken";
+        }
+        
+        // validasi password
+        if(!isRequired($password)){
+            $error['password'][] = "password can't be empty!"; 
+        } elseif(!hasMinLength($password, 8)) {
+            $error['password'][] = "password must have at least 8 characters";
+        } elseif(!hasMaxLength($password, 16)) {
+            $error['password'][] = "password has a maximum of 16 characters";
+        }
+
+        return $error;
+
+       
+    }
+
     function memberUpdate($data) {
         $error = null;
         

@@ -25,14 +25,14 @@
         $query = "SELECT * FROM members WHERE status_members = 1";
         $result = mysqli_query($conn, $query);
 
-        $data_mahasiswa = [];
+        $data_member = [];
         if($result && mysqli_num_rows($result) > 0){
             while($rows = mysqli_fetch_assoc($result)){
-                $data_mahasiswa[] = $rows;
+                $data_member[] = $rows;
             }
         }
 
-        return $data_mahasiswa;
+        return $data_member;
     
     }
 

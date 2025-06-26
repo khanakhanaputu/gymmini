@@ -1,7 +1,7 @@
 <?php
 
     require_once __DIR__ . './../../includes/connection.php';
-    require_once __DIR__ . './../../models/member.model.php';
+    require_once __DIR__ . './../../models/users.model.php';
     require_once __DIR__ . './../../includes/validator.php';
 
     header("Content-Type: application/json");
@@ -19,15 +19,18 @@
     if($_SERVER['REQUEST_METHOD'] === "GET") {
         $id = $_GET['id'] ?? null;
 
+
         // get data by id
         if($id) {
-            $memberDataById = getMemberById($id, $conn);
-            if($memberDataById) {
+            $kasirDataById = getDataKasirById($id, $conn);
+            if($kasirDataById) {
+                unset($kasirDataById['password']);
                 http_response_code(200);
                 $response['status'] = 200;
                 $response['message'] = 'OK';
-                $response['data'] = $memberDataById;
+                $response['data'] = $kasirDataById;
             } else {
+                unset($kasirDataById['password']);
                 http_response_code(404); // 404 Not Found
                 $respone['status'] = 404;
                 $respone['message'] = "Data tidak ditemukan";
@@ -36,15 +39,16 @@
         
         // get all data
         } else {
-            $allMemberData = getAllMember($conn);
-
-             if($allMemberData) {
+            $allKasirData = getAllDataKasir($conn);
+            if($allKasirData) {
+                unset($allKasirData['password']);
                 http_response_code(200);
                 $response['status'] = 200;
                 $response['message'] = 'OK';
-                $response['data'] = $allMemberData;
+                $response['data'] = $allKasirData;
             } else {
-                http_response_code(404); // 404 Not Found
+                unset($allKasirData['password']);
+                http_response_code(200); // 200 Not Found
                 $respone['status'] = 200;
                 $respone['message'] = "Tidak ada tidak ditemukan";
                 $respone['data'] = [];
